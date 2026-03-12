@@ -38,6 +38,3 @@ uvicorn main:app --reload
 ```
 
 Then open `http://127.0.0.1:8000/` in your browser to view the dashboard, or use the automatic docs at `http://127.0.0.1:8000/docs`.
-
-
-# Pris
