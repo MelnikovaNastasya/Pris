@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>RetailGenie Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0f172a;
+        --bg-light: #111827;
+        --card: #020617;
+        --accent: #38bdf8;
+        --accent-soft: rgba(56, 189, 248, 0.1);
+        --text: #e5e7eb;
+        --text-muted: #9ca3af;
+        --border: rgba(148, 163, 184, 0.3);
+        --danger: #f97373;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          sans-serif;
+        background: radial-gradient(circle at top left, #1e293b 0, #020617 45%);
+        color: var(--text);
+      }
+
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 20px 40px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 14px;
+        background: radial-gradient(circle at 30% 20%, #38bdf8, #0ea5e9 40%, #0369a1);
+        box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7),
+          0 18px 32px rgba(8, 47, 73, 0.75);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .brand-logo::after {
+        content: "";
+        position: absolute;
+        inset: 9px 7px 9px 15px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.9);
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 1.35rem;
+        letter-spacing: 0.02em;
+      }
+
+      .brand p {
+        margin: 2px 0 0;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+
+      .pill {
+        padding: 6px 11px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        font-size: 0.76rem;
+        color: var(--text-muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(12px);
+      }
+
+      .pill-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.22);
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 20px;
+      }
+
+      @media (max-width: 860px) {
+        main {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: radial-gradient(circle at top, #111827 0, #020617 55%);
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        padding: 18px 18px 16px;
+        box-shadow: 0 22px 45px rgba(15, 23, 42, 0.9);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .card-title {
+        font-size: 0.95rem;
+        font-weight: 550;
+      }
+
+      .card-subtitle {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .muted {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 18px;
+      }
+
+      @media (max-width: 720px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .stat {
+        padding: 10px 11px;
+        border-radius: 13px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: radial-gradient(circle at 0 0, #0f172a 0, #020617 55%);
+      }
+
+      .stat-label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      .stat-value {
+        margin-top: 6px;
+        font-size: 1.18rem;
+        font-weight: 600;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        color: var(--accent);
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      .tag span {
+        font-size: 0.8em;
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 6px;
+        font-size: 0.8rem;
+      }
+
+      .table th,
+      .table td {
+        padding: 7px 2px;
+        text-align: left;
+      }
+
+      .table th {
+        font-weight: 500;
+        color: var(--text-muted);
+        border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      }
+
+      .table tr + tr td {
+        border-top: 1px solid rgba(15, 23, 42, 0.85);
+      }
+
+      .table-number {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .pill-xs {
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        font-size: 0.7rem;
+        color: var(--text-muted);
+      }
+
+      .loading,
+      .error {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .error {
+        color: var(--danger);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true"></div>
+          <div>
+            <h1>RetailGenie</h1>
+            <p>Store analytics for product mix and pricing.</p>
+          </div>
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          Live demo data
+        </div>
+      </header>
+
+      <main>
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Revenue & Activity</div>
+              <div class="card-subtitle">
+                Overview of store performance from orders.
+              </div>
+            </div>
+            <span class="tag">
+              <span>Analytics</span>
+              <span>•</span>
+              <span>Backend APIs</span>
+            </span>
+          </div>
+
+          <div class="grid" style="margin-top: 4px">
+            <div>
+              <div class="stat">
+                <div class="stat-label">Total revenue</div>
+                <div class="stat-value" id="total-revenue">–</div>
+                <div class="muted" id="total-revenue-caption">
+                  Loading analytics…
+                </div>
+              </div>
+
+              <div style="margin-top: 14px">
+                <table class="table" id="popular-products-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 55%">Top products</th>
+                      <th class="table-number">Units</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="2" class="loading">
+                        Loading popular products…
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <div class="stat">
+                <div class="stat-label">Most active customers</div>
+                <div class="muted">By orders and total spend.</div>
+                <table class="table" id="customer-stats-table">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      <th class="table-number">Orders</th>
+                      <th class="table-number">Spend</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="3" class="loading">
+                        Loading customer stats…
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">How this prototype works</div>
+              <div class="card-subtitle">
+                FastAPI + SQLite with seed data for demo exploration.
+              </div>
+            </div>
+          </div>
+          <div class="muted">
+            <p>
+              RetailGenie tracks customers, products, orders, and order items. The
+              backend exposes REST endpoints for each entity plus analytics
+              endpoints for:
+            </p>
+            <ul style="padding-left: 18px; margin-top: 6px">
+              <li>Top selling products (`/analytics/popular-products`)</li>
+              <li>Total revenue (`/analytics/revenue`)</li>
+              <li>Most active customers (`/analytics/customer-stats`)</li>
+            </ul>
+            <p>
+              This dashboard is a tiny HTML shell that calls those APIs directly
+              via JavaScript. Replace it with your own frontend or BI tool as you
+              evolve the platform.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const money = (value) =>
+        new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 2,
+        }).format(value ?? 0);
+
+      async function fetchJSON(path) {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+        return res.json();
+      }
+
+      async function loadAnalytics() {
+        const revenueEl = document.getElementById("total-revenue");
+        const revenueCaptionEl = document.getElementById(
+          "total-revenue-caption"
+        );
+        const popularTable = document.getElementById(
+          "popular-products-table"
+        ).querySelector("tbody");
+        const customerTable = document.getElementById(
+          "customer-stats-table"
+        ).querySelector("tbody");
+
+        try {
+          const [revenue, popular, customers] = await Promise.all([
+            fetchJSON("/analytics/revenue"),
+            fetchJSON("/analytics/popular-products"),
+            fetchJSON("/analytics/customer-stats"),
+          ]);
+
+          // Revenue
+          revenueEl.textContent = money(revenue.total_revenue || 0);
+          revenueCaptionEl.textContent = "Aggregated from all orders.";
+
+          // Popular products
+          popularTable.innerHTML = "";
+          if (!popular.length) {
+            popularTable.innerHTML =
+              '<tr><td colspan="2" class="muted">No sales data yet.</td></tr>';
+          } else {
+            popular.forEach((row) => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td>
+                  <div>${row.name}</div>
+                  <div class="muted" style="font-size: 0.75rem">
+                    ID: ${row.product_id}
+                  </div>
+                </td>
+                <td class="table-number">${row.total_quantity}</td>
+              `;
+              popularTable.appendChild(tr);
+            });
+          }
+
+          // Customer stats
+          customerTable.innerHTML = "";
+          if (!customers.length) {
+            customerTable.innerHTML =
+              '<tr><td colspan="3" class="muted">No customers with orders yet.</td></tr>';
+          } else {
+            customers.forEach((row) => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td>
+                  <div>${row.name}</div>
+                  <div class="muted" style="font-size: 0.75rem">
+                    ID: ${row.customer_id}
+                  </div>
+                </td>
+                <td class="table-number">
+                  <span class="pill-xs">${row.orders_count}</span>
+                </td>
+                <td class="table-number">${money(row.total_spent)}</td>
+              `;
+              customerTable.appendChild(tr);
+            });
+          }
+        } catch (err) {
+          console.error(err);
+          revenueEl.textContent = "–";
+          revenueCaptionEl.textContent =
+            "Unable to load analytics. Is the API running?";
+          popularTable.innerHTML =
+            '<tr><td colspan="2" class="error">Failed to load popular products.</td></tr>';
+          customerTable.innerHTML =
+            '<tr><td colspan="3" class="error">Failed to load customer stats.</td></tr>';
+        }
+      }
+
+      loadAnalytics();
+    </script>
+  </body>
+</html>
+
